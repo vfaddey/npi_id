@@ -74,9 +74,13 @@ class UserService:
         return new_access_token
 
     async def authenticate_user(self, email: str, password: str) -> Token:
+        user = await self.authorize_user(email, password)
+        return self.create_token(user.id, email, full_token=True)
+
+    async def authorize_user(self, email: str, password: str) -> UserOut:
         user = await self.repository.get_by_email(email)
         if not user:
             raise UserNotFoundException(f'No user with such email: {email}')
         if not verify_password(password, user.password):
             raise AuthenticationException('Incorrect password')
-        return self.create_token(user.id, email, full_token=True)
+        return UserOut.from_orm(user)
