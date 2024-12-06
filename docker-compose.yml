@@ -58,5 +58,5 @@ services:
       - backend
 
 volumes:
-  postgres:
+  pg_data:
   pgadmin:
