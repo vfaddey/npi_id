@@ -32,7 +32,6 @@ pathspec==0.12.1
 platformdirs==4.3.6
 pyasn1==0.6.1
 pycparser==2.22
-pycrypto==2.6.1
 pydantic==2.10.2
 pydantic-settings==2.6.1
 pydantic_core==2.27.1
