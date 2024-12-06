@@ -9,6 +9,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
+    root_path="/"
 )
 app.include_router(auth_router)
 app.include_router(users_router)
