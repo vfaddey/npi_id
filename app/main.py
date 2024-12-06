@@ -6,11 +6,13 @@ from app.api.v1.users import router as users_router
 from app.api.v1.oidc import router as oidc_router
 
 app = FastAPI(
-
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 app.include_router(auth_router)
 app.include_router(users_router)
-app.include_router(oidc_router)
+app.include_router(oidc_router, include_in_schema=False)
 
 
 app.add_middleware(
