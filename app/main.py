@@ -13,7 +13,7 @@ app = FastAPI(
 )
 app.include_router(auth_router)
 app.include_router(users_router)
-app.include_router(oidc_router, include_in_schema=False)
+app.include_router(oidc_router)
 
 
 app.add_middleware(
