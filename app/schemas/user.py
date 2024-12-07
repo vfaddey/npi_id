@@ -7,6 +7,7 @@ from pydantic import BaseModel, UUID4, EmailStr
 class UserCreate(BaseModel):
     first_name: str
     last_name: str
+    password: str
     email: EmailStr
     phone_number: Optional[str] = ''
 
