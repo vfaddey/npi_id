@@ -17,7 +17,7 @@ class UserService:
     def __init__(self, repository):
         self.repository = repository
 
-    async def create(self, user: UserCreate) -> UserOut:
+    async def create(self, user: UserCreate) -> Token:
         existing_user = await self.repository.get_by_email(user.email)
         if existing_user:
             raise UserAlreadyExistsException('User with such email already exists')
