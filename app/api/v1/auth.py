@@ -42,6 +42,6 @@ async def register(add_user: UserCreate,
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.post('/forgot')
+@router.post('/forgot', include_in_schema=False)
 async def forgot_password():
     ...
