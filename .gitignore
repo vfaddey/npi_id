@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 *.cpython-310.pyc
+*.pyc
 .Python
 build/
 develop-eggs/
