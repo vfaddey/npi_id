@@ -93,7 +93,7 @@ async def authorize(
     except ClientNotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
-    if authorize_schema.redirect_uri != client.redirect_uri:
+    if str(client.redirect_uri) in authorize_schema.redirect_uri:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Redirect URI is invalid')
     if authorize_schema.response_type != client.response_type:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Response type is invalid')
