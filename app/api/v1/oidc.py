@@ -93,7 +93,7 @@ async def authorize(
     except ClientNotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
-    if str(client.redirect_uri) in authorize_schema.redirect_uri:
+    if str(client.redirect_uri) not in authorize_schema.redirect_uri:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Redirect URI is invalid')
     if authorize_schema.response_type != client.response_type:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Response type is invalid')
@@ -127,10 +127,10 @@ async def get_token(
 
     if client.client_secret != client_secret:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Client secret is invalid')
-    if client.redirect_uri != redirect_uri:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Redirect URI is invalid')
-    if client.grant_type != grant_type:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Grant type is invalid')
+    # if client.redirect_uri != redirect_uri:
+    #     raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Redirect URI is invalid')
+    # if client.grant_type != grant_type:
+    #     raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Grant type is invalid')
 
     user = await get_current_user(code, user_service)
     full_token = user_service.create_token(user.id, user.email, full_token=True)
