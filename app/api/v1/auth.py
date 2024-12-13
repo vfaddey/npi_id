@@ -4,7 +4,7 @@ from starlette import status
 
 from app.api.deps import get_user_service
 from app.exceptions.base import NPIException
-from app.schemas.token import Token, RefreshTokenRequest
+from app.schemas.token import Token, RefreshTokenRequest, FullToken
 from app.schemas.user import UserCreate
 from app.services.user_service import UserService
 
@@ -32,7 +32,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(),
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
 
 
-@router.post('/register', response_model=Token)
+@router.post('/register', response_model=FullToken)
 async def register(add_user: UserCreate,
                    user_service: UserService = Depends(get_user_service)):
     try:
