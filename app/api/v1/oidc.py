@@ -77,37 +77,43 @@ async def authorize_get(
 
 @router.post('/authorize')
 async def authorize(
-    authorize_schema: OIDCAuthorize,
+    response_type: str = Form(...),
+    client_id: str = Form(...),
+    redirect_uri: str = Form(...),
+    scope: str = Form(...),
+    state: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
     client_service: OAuth2ClientService = Depends(get_oath2_client_service),
     user_service: UserService = Depends(get_user_service)
 ):
-    user_email = authorize_schema.email
-    user_password = authorize_schema.password
+    user_email = email
+    user_password = password
     try:
         user = await user_service.authorize_user(user_email, user_password)
     except NPIException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
 
     try:
-        client = await client_service.get_by_client_id(authorize_schema.client_id)
+        client = await client_service.get_by_client_id(client_id)
     except ClientNotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
-    if str(client.redirect_uri) not in authorize_schema.redirect_uri:
+    if str(client.redirect_uri) not in redirect_uri:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Redirect URI is invalid')
-    if authorize_schema.response_type != client.response_type:
+    if response_type != client.response_type:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Response type is invalid')
-    if authorize_schema.scope != client.scope:
+    if scope != client.scope:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Scope is invalid')
 
     payload = {
-        "client_id": authorize_schema.client_id,
-        "redirect_uri": authorize_schema.redirect_uri,
-        "scope": authorize_schema.scope,
+        "client_id": client_id,
+        "redirect_uri": redirect_uri,
+        "scope": scope,
         "sub": str(user.id),
     }
     code = JWTProvider.encode_access_token(payload, expires_delta=10)
-    redirect_uri = f'{client.redirect_uri}?code={code}&state={authorize_schema.state}'
+    redirect_uri = f'{client.redirect_uri}?code={code}&state={state}'
     return RedirectResponse(redirect_uri, status_code=status.HTTP_302_FOUND)
 
 @router.post('/token', response_model=FullToken)
