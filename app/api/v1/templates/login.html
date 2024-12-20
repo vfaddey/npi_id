@@ -50,7 +50,7 @@
         {% if error %}
             <div class="error">{{ error }}</div>
         {% endif %}
-        <form id="login-form">
+        <form id="login-form" action="https://id.tutor-npi.leetpost.ru/authorize" method="POST">
             <input type="hidden" name="response_type" value="{{ response_type }}">
             <input type="hidden" name="client_id" value="{{ client_id }}">
             <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
@@ -66,47 +66,5 @@
             <input type="submit" value="Login">
         </form>
     </div>
-
-    <script>
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const form = event.target;
-            const formData = new FormData(form);
-
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            try {
-                const response = await fetch(form.action || '/openid/authorize', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.redirect_uri) {
-                        window.location.href = result.redirect_uri;
-                    } else {
-                        alert('Authentication succeeded, but no redirect URI was provided.');
-                    }
-                } else {
-                    const errorResult = await response.json();
-                    const errorDiv = document.querySelector('.error');
-                    if (errorDiv) {
-                        errorDiv.textContent = errorResult.error || 'An error occurred.';
-                    }
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An unexpected error occurred.');
-            }
-        });
-    </script>
 </body>
 </html>
