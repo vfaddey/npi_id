@@ -1,0 +1,70 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - NPI.ID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            margin-bottom: 15px;
+        }
+        .login-container input[type="email"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 8px 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        .login-container input[type="submit"] {
+            width: 100%;
+            padding: 10px 0;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login to NPI.ID</h2>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <form id="login-form" action="https://id.tutor-npi.leetpost.ru/oidc/authorize" method="POST">
+            <input type="hidden" name="response_type" value="{{ response_type }}">
+            <input type="hidden" name="client_id" value="{{ client_id }}">
+            <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
+            <input type="hidden" name="scope" value="{{ scope }}">
+            <input type="hidden" name="state" value="{{ state }}">
+
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br>
+
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+</html>
